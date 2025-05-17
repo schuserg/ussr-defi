@@ -16,10 +16,10 @@ w3 = Web3(Web3.HTTPProvider(ALCHEMY_API_URL))
 app = Flask(__name__)
 
 # === CONTRACT LOAD ===
-with open("USSRNFT.abi.json") as f:
+with open("../contracts/USSRNFT.abi.json") as f:
     nft_abi = json.load(f)
 
-with open("deployed_addresses.json") as f:
+with open("../contracts/deployed_addresses.json") as f:
     deployed = json.load(f)
 
 nft_address = deployed["USSRNFT"]
