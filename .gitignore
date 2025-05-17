@@ -1,0 +1,10 @@
+
+.env
+__pycache__/
+*.pyc
+node_modules/
+build/
+dist/
+.mypy_cache/
+mint_state.json
+minted_nfts_log.json
