@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
-import USSRTokenABI from "./USSRToken.abi.json";
-import USSRNFTABI from "./USSRNFT.abi.json";
-import USSRStakingABI from "./USSRStaking.abi.json";
-import deployed from "./deployed_addresses.json";
+import USSRTokenABI from "../../contracts/USSRToken.abi.json";
+import USSRNFTABI from "../../contracts/USSRNFT.abi.json";
+import USSRStakingABI from "../../contracts/USSRStaking.abi.json";
+import deployed from "../../contracts/deployed_addresses.json";
 
 const USSRStakingAddress = deployed.USSRStaking;
 const USSRTokenAddress = deployed.USSRToken;
@@ -32,7 +32,7 @@ export default function App() {
 
   const connectWallet = async () => {
     if (!provider) {
-      setLog("❌ MetaMask не найден");
+      setLog("❌ MetaMask not found");
       return;
     }
 
@@ -51,111 +51,111 @@ export default function App() {
       setNftContract(nft);
       setStakingContract(staking);
 
-      setLog("✅ Кошелёк подключён: " + accounts[0]);
+      setLog("✅ Wallet connected: " + accounts[0]);
     } catch (err) {
-      setLog("❌ Ошибка подключения: " + err.message);
+      setLog("❌ Connection error: " + err.message);
     }
   };
 
   const checkBalance = async () => {
     try {
       if (!tokenContract || !walletAddress) {
-        setLog("❌ Контракт или адрес не задан");
+        setLog("❌ Contract or address not set");
         return;
       }
       const bal = await tokenContract.balanceOf(walletAddress);
-      setLog("📗 Баланс: " + ethers.formatUnits(bal, 18));
+      setLog("📗 Balance: " + ethers.formatUnits(bal, 18));
     } catch (err) {
-      setLog("❌ Ошибка баланса: " + err.message);
+      setLog("❌ Balance error: " + err.message);
     }
   };
 
-  // mintNFT функция
+  // mintNFT function
 const mintNFT = async () => {
   try {
     if (!nftContract || !walletAddress) {
-      setLog("❌ Контракт или адрес не задан!");
+      setLog("❌ NFT minted successfully!");
       return;
     }
 
     const tx = await nftContract.mint();
     await tx.wait();
-    setLog("✅ NFT успешно заминчен!");
+    setLog("✅ NFT minted successfully!");
   } catch (err) {
     if (err.message.includes("All NFTs minted")) {
-      setLog("ℹ️ Все NFT уже заминчены.");
+      setLog("ℹ️ All NFTs are already minted.");
     } else {
-      setLog("❌ Ошибка минтинга NFT: " + err.message);
+      setLog("❌ NFT minting error: " + err.message);
     }
   }
 };
 
-// getTokens функция
+// getTokens function
 const getTokens = async () => {
   try {
     const amount = ethers.parseUnits("1000", 18);
     const tx = await tokenContract.mint(walletAddress, amount);
     await tx.wait();
-    setLog("✅ Токены успешно заминчены!");
+    setLog("✅ Tokens minted successfully!");
   } catch (err) {
-    setLog("❌ Ошибка минтинга токенов: " + err.message);
+    setLog("❌ Token minting error: " + err.message);
   }
 };
 
-// stake функция
+// stake function
 const stake = async () => {
   try {
     if (!stakingContract || !amount) {
-      setLog("❌ Контракт или сумма не указаны!");
+      setLog("❌ Contract is not initialized!");
       return;
     }
     const parsedAmount = ethers.parseUnits(amount, 18);
     const tx = await stakingContract.stake(parsedAmount);
     await tx.wait();
-    setLog("✅ Успешный стейкинг!");
+    setLog("✅ Staking successful!");
   } catch (err) {
-    setLog("❌ Ошибка стейкинга: " + err.message);
+    setLog("❌ Staking error: " + err.message);
   }
 };
 
-// claim функция
+// claim function
 const claim = async () => {
   try {
     if (!stakingContract) {
-      setLog("❌ Контракт не инициализирован!");
+      setLog("❌ Contract is not initialized!");
       return;
     }
 
     const tx = await stakingContract.getReward();  // <-- исправлено
     await tx.wait();
-    setLog("✅ Успешный клейм!");
+    setLog("✅ Claim successful!");
   } catch (err) {
-    setLog("❌ Ошибка клейма: " + err.message);
+    setLog("❌ Claim error: " + err.message);
   }
 };
 
   return (
     <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">🪙 CCCP DeFi + Metamask</h1>
-      <Button onClick={connectWallet}>🔌 Подключить MetaMask</Button>
+      <h1 className="text-xl font-bold mb-4">🪙 USSR DeFi + Metamask</h1>
+      <Button onClick={connectWallet}>🔌 Connect MetaMask</Button>
 
       <Input
         className="my-3"
-        placeholder="Ваш адрес"
+        placeholder="Your address"
         value={walletAddress}
         readOnly
       />
 
       <div className="flex gap-2 flex-wrap">
-        <Button onClick={mintNFT}>🎨 Минт NFT</Button>
-        <Button onClick={getTokens}>💸 Получить токены</Button>
-        <Button onClick={checkBalance}>🧾 Проверить баланс</Button>
+        <Button onClick={mintNFT}>🎨 Mint NFT</Button>
+        <Button onClick={getTokens}>💸 Get Tokens</Button>
+        <Button onClick={checkBalance}>🧾 Check Balance</Button>
       </div>
 
       <div className="flex gap-2 flex-wrap mt-4">
         <Input
           type="text"
-          placeholder="Сумма для стейкинга"
+          placeholder="Amount to stake"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
