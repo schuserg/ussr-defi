@@ -1,47 +1,45 @@
-
 # USSR DeFi DApp
 
-USSR — это полноценный DeFi-проект, в котором реализованы:
-- Минт NFT (через MetaMask и backend)
-- Stake токенов
-- Claim наград
+USSR is a fully functional DeFi project that includes the following features:
+
+- NFT minting (via MetaMask and backend)
+- Token staking
+- Reward claiming
 - Airdrop faucet
 
-## Стек технологий
+## Technology Stack
 - Python + Flask (backend API)
-- Solidity (контракты NFT и Token)
-- React (frontend UI с поддержкой MetaMask)
-- IPFS (хранение метаданных для NFT)
-- Web3.py (взаимодействие с блокчейном)
+- Solidity (NFT and Token smart contracts)
+- React (frontend UI with MetaMask support)
+- IPFS (metadata storage for NFTs)
+- Web3.py (blockchain interaction)
 
-## Установка и запуск
+## Setup and Run
 
 ### Backend
+
 ```bash
 cd backend
 pip install -r requirements.txt
-cp .env.template .env  # и заполни ALCHEMY_API_URL, PRIVATE_KEY, PUBLIC_KEY
+cp .env.template .env  # fill in ALCHEMY_API_URL, PRIVATE_KEY, PUBLIC_KEY
 python faucet_server_web3_staking.py
-```
 
-### Frontend
-```bash
+Frontend
 cd frontend
 npm install
 npm run dev
-```
 
-## Пример
-- Минт через `/mint_nft`
-- Stake через `/stake`
-- Claim через `/claim`
-- Все действия фиксируются в mint_state.json и log-файлах
+Examples
+Mint via /mint_nft
+Stake via /stake
+Claim via /claim
+All actions are recorded in mint_state.json and log files.
 
-## Контракты
-- NFT: [ССЫЛКА НА EXPLORER]
-- Token: [ССЫЛКА НА EXPLORER]
+Smart Contracts
+NFT: [LINK TO EXPLORER]
+Token: [LINK TO EXPLORER]
 
-## Скриншоты
+ Screenshots
 ![mint_confirm.png](screenshots_github/mint_confirm.png)
 ![frontend_wallet_view.png](screenshots_github/frontend_wallet_view.png)
 ![mint_success.png](screenshots_github/mint_success.png)
@@ -51,5 +49,7 @@ npm run dev
 ![claim_success.png](screenshots_github/claim_success.png)
 ![opensea_nft_list.png](screenshots_github/opensea_nft_list.png)
 
-## Лицензия
+🪪 License
 MIT
+
+ 
