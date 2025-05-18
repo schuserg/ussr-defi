@@ -51,7 +51,8 @@ def main():
 
     elif choice == "5":
         try:
-            response = requests.post(f"{SERVER_URL}/claim")
+            data = {"recipient": RECIPIENT_ADDRESS}
+            response = requests.post(f"{SERVER_URL}/claim", json=data)
             print(response.json())
         except Exception as e:
             print(f"Connection error: {e}")

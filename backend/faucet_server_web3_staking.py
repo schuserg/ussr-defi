@@ -24,6 +24,11 @@ with open("../contracts/deployed_addresses.json") as f:
 
 nft_address = deployed["USSRNFT"]
 nft_contract = w3.eth.contract(address=nft_address, abi=nft_abi)
+token_address = deployed["USSRToken"]
+with open("../contracts/USSRToken.abi.json") as f:
+    token_abi = json.load(f)
+
+token_contract = w3.eth.contract(address=token_address, abi=token_abi)
 
 # === CONST ===
 METADATA_FOLDER = "metadata"
@@ -62,7 +67,7 @@ def mint_nft():
     metadata_path = Path(METADATA_FOLDER) / f"{index}.json"
 
     if not metadata_path.exists():
-        return jsonify({"error": "Все NFT уже заминчены"}), 400
+        return jsonify({"error": "All NFTs have been minted"}), 400
 
     try:
         with open(metadata_path) as f:
@@ -87,10 +92,80 @@ def mint_nft():
         log_minted_nft(index, tx_hash_hex, token_uri)
 
         return jsonify({
-            "message": f"🎉 NFT заминчен с URI {token_uri}",
+            "message": f"🎉 NFT minted with URI {token_uri}",
             "tx_hash": tx_hash_hex
         })
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@app.route("/faucet_token", methods=["POST"])
+def faucet_token():
+    try:
+        data = request.get_json()
+        recipient = data.get("recipient")
+
+        if not recipient:
+            return jsonify({"error": "Missing recipient"}), 400
+
+        # 🔧 You can insert token transfer logic here:
+        # tx = token_contract.functions.transfer(recipient, AMOUNT).build_transaction({...})
+
+        return jsonify({"message": f"🎉 Tokens sent to {recipient}"})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@app.route("/check_balance", methods=["GET"])
+def check_balance():
+    try:
+        address = request.args.get("address")
+        if not address:
+            return jsonify({"error": "Missing address parameter"}), 400
+
+        raw_balance = token_contract.functions.balanceOf(address).call()
+        balance = raw_balance / (10 ** 18)
+
+        return jsonify({"address": address, "balance": balance})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@app.route("/stake", methods=["POST"])
+def stake_tokens():
+    try:
+        data = request.get_json()
+        recipient = data.get("recipient")
+        amount = int(data.get("amount"))
+
+        if not recipient or not amount:
+            return jsonify({"error": "Missing recipient or amount"}), 400
+
+        # TODO: Call stake() on the staking contract
+        # Пример:
+        # txn = staking_contract.functions.stake(amount).build_transaction({...})
+        # ...
+
+        return jsonify({"message": f"🔥 {amount} tokens staked for {recipient}"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+@app.route("/claim", methods=["POST"])
+def claim_rewards():
+    try:
+        data = request.get_json()
+        recipient = data.get("recipient")
+
+        if not recipient:
+            return jsonify({"error": "Missing recipient"}), 400
+
+        # 💡 Пример вызова контракта claim
+        # txn = staking_contract.functions.claim().build_transaction({
+        #     "from": recipient,
+        #     ...
+        # })
+
+        return jsonify({"message": f"💰 Rewards claimed for {recipient}"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
